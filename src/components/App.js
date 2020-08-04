@@ -1,8 +1,13 @@
 import React from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
+import styled, {
+  createGlobalStyle,
+} from 'styled-components';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import {
-  ApolloClient, ApolloProvider, HttpLink, InMemoryCache,
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
 } from '@apollo/client';
 import Header from './Header/Header';
 import Products from './Products/Products';
@@ -21,6 +26,12 @@ const cache = new InMemoryCache();
 const client = new ApolloClient({
   link: httpLink,
   cache,
+  resolvers: {},
+  typeDefs: `
+    extend type Query {
+        limit: Int!
+    }
+  `,
 });
 
 const GlobalStyle = createGlobalStyle`

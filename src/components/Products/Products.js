@@ -1,18 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import SubHeader from '../Header/SubHeader';
 import ProductItem from './ProductItem';
-
-const GET_PRODUCTS = gql`
-  query getProducts {
-    products {
-      id
-      title
-      thumbnail
-    }
-  }
-`;
+import { GET_PRODUCTS } from '../../constants';
+import Filters from './Filters';
 
 const ProductItemsWrapper = styled.div`
   display: flex;
@@ -28,7 +20,9 @@ const Alert = styled.span`
 `;
 
 const Products = ({ history }) => {
-  const { loading, error, data } = useQuery(GET_PRODUCTS);
+  const { loading, error, data } = useQuery(GET_PRODUCTS, {
+    variables: { limit: 5 },
+  });
 
   return (
     <>
@@ -38,6 +32,8 @@ const Products = ({ history }) => {
           goToCart={() => history.push('/cart')}
         />
       )}
+
+      <Filters limit={5} />
       {loading || error ? (
         <Alert>
           {loading ? 'Loading...' : error.message}
