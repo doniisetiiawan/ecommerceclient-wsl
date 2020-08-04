@@ -1,6 +1,9 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import {
+  ApolloClient, ApolloProvider, HttpLink, InMemoryCache,
+} from '@apollo/client';
 import Header from './Header/Header';
 import Products from './Products/Products';
 import Cart from './Cart/Cart';
@@ -8,6 +11,17 @@ import Login from './Checkout/Login';
 import Checkout from './Checkout/Checkout';
 
 const isAuthenticated = sessionStorage.getItem('token');
+
+const httpLink = new HttpLink({
+  uri: 'http://localhost:4000/graphql',
+});
+
+const cache = new InMemoryCache();
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache,
+});
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -27,7 +41,7 @@ const AppWrapper = styled.div`
 
 function App() {
   return (
-    <>
+    <ApolloProvider client={client}>
       <GlobalStyle />
       <AppWrapper>
         <Header />
@@ -45,8 +59,7 @@ function App() {
           <Route path="/login" component={Login} />
         </Switch>
       </AppWrapper>
-
-    </>
+    </ApolloProvider>
   );
 }
 
