@@ -9,6 +9,7 @@ import {
   HttpLink,
   InMemoryCache,
 } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import Header from './Header/Header';
 import Products from './Products/Products';
 import Cart from './Cart/Cart';
@@ -21,10 +22,21 @@ const httpLink = new HttpLink({
   uri: 'http://localhost:4000/graphql',
 });
 
+const authLink = setContext((_, { headers }) => {
+  const token = isAuthenticated;
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({
-  link: httpLink,
+  link: authLink.concat(httpLink),
   cache,
   resolvers: {},
   typeDefs: `

@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useMutation } from '@apollo/client';
 import Button from '../Button/Button';
+import { COMPLETE_CART } from '../../constants';
 
 const CheckoutWrapper = styled.div`
   display: flex;
@@ -10,8 +12,7 @@ const CheckoutWrapper = styled.div`
 `;
 
 const Checkout = () => {
-  const [completeCart, { data }] = null;
-
+  const [completeCart, { data }] = useMutation(COMPLETE_CART);
   return (
     <CheckoutWrapper>
       {data && data.completeCart.complete ? (
